@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>新增员工基本信息</title>
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/contants.js"></script>
+    <script src="../js/YZidCard.js"></script>
+    <link rel="stylesheet" href="../css/addcommon.css">
+</head>
+<body>
+<div class="titlebox">新增员工基本信息</div>
+<div class="buttonbox">
+    <button id="ShangBao" class="btn btnleft">上报</button>
+    <button id="QuXiao" class="btn btnright">取消</button>
+</div>
+<div class="infobox">
+    <div><span>员工姓名</span></div><input id="name" placeholder="请输入员工姓名"/>
+    <div id="JGWord" style="margin-top: 0%;display: none"><span style="color: red">员工姓名不能为空！</span></div>
+    <div><span>手机号码</span></div><input id="phone" placeholder="请输入手机号码"/>
+    <div><span>身份证/护照</span></div><input id="idcard" placeholder="请输入身份证号码/护照"/>
+    <div><span>人员属性</span></div>
+    <select id="ryshuxing">
+        <option value="户籍人员">户籍人员</option>
+        <option value="流动人员">流动人员</option>
+    </select>
+    <div><span>户籍地址</span></div><input id="hjaddress" placeholder="请输入户籍地址"/>
+    <div><span>现居住地址</span></div><input id="xjzaddress" placeholder="请输入现居住地址"/>
+    <div><span>是否居住集宿</span></div>
+    <select id="sfjisu">
+        <option value="是">是</option>
+        <option value="否">否</option>
+    </select>
+</div>
+
+</body>
+<script>
+    function GetRequest() {
+        var urlStr = location.search
+        if (typeof urlStr == "undefined") {
+            var url = location.search; //获取url中"?"符后的字符串
+        } else {
+            var url = "?" + urlStr.split("?")[1];
+        }
+        var theRequest = new Object();
+        if (url.indexOf("?") != -1) {
+            var str = url.substr(1);
+            strs = str.split("&");
+            for (var i = 0; i < strs.length; i++) {
+                theRequest[strs[i].split("=")[0]] = decodeURI(strs[i].split("=")[1]);
+            }
+        }
+        return theRequest;
+    }
+    var parms = GetRequest()
+    var qyid = parms['qyid']
+
+    $("#name").on("change",function(){
+        var ygname = $("#name").val()
+        if(ygname==''){
+            document.getElementById('JGWord').style.display=''
+        }else{
+            document.getElementById('JGWord').style.display='none'
+        }
+    })
+
+    $("#ShangBao").unbind('click').click(function () {
+        var sfzjy = IdentityCodeValid($("#idcard").val())
+        if(sfzjy=='false'){
+            alert("身份证/护照信息不正确，请重新输入")
+        } else if($("#name").val()==''||$("#phone").val()==''||$("#hjaddress").val()==''||$("#xjzaddress").val()==''){
+            alert("信息不完整，请重新输入！")
+        } else{
+            var obj = {
+                'hjaddress': $("#hjaddress").val(),
+                'idcard': $("#idcard").val(),
+                'name':$("#name").val(),
+                'phone':$("#phone").val(),
+                'qyid': qyid,
+                'ryshuxing':$("#ryshuxing").val(),
+                'sfjisu':$("#sfjisu").val(),
+                'status':'1',
+                'xjzaddress':$("#xjzaddress").val(),
+            };
+            $.ajax({
+                url:svcHeader+"pv/ygxxs",
+                dataType:'json',
+                type:'POST',
+                contentType: 'application/json',
+                data:JSON.stringify(obj),
+                success:function (data) {
+                    if(data.code=="200") {
+                        window.location.href="JKAdd.html?qyid="+qyid
+                    }else{
+                        alert(data.msg)
+                    }
+                }
+            })
+        }
+    })
+
+    $("#QuXiao").unbind('click').click(function () {
+        $("#name").val('');
+        $("#phone").val('');
+        $("#idcard").val('');
+        $("#ryshuxing").val('户籍人员');
+        $("#hjaddress").val('');
+        $("#xjzaddress").val('');
+        $("#sfjisu").val('是');
+    })
+
+
+</script>
+</html>

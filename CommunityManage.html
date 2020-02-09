@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>区-镇(社区)管理</title>
+    <link rel="stylesheet" href="css/table1.css">
+    <link rel="stylesheet" href="css/mulu.css">
+    <link rel="stylesheet" href="css/element.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/0_common/bootstrap-table.css">
+    <script src="css/jquery.min.js"></script>
+    <script src="css/vue.js"></script>
+    <script src="css/element.js"></script>
+    <script src="js/table.js"></script>
+    <script src="js/0_common/bootstrap.min.js"></script>
+    <script src="js/0_common/bootstrap-table.js"></script>
+    <script src="js/constants.js"></script>
+    <script src="js/YZidCard.js"></script>
+
+</head>
+<body>
+<div class="dqy"><span>当前页：区-镇(社区)管理</span></div>
+<div id="dhmenu">
+    <div id="add"><div class="caozuobox"><img src="img/table/add.png"></div><div class="caozuobox"><span>新增</span></div></div>
+    <div id="update"><div class="caozuobox"><img src="img/table/update.png"></div><div class="caozuobox"><span>修改</span></div></div>
+    <div id="delete"><div class="caozuobox"><img src="img/table/delete.png"></div><div class="caozuobox"><span>删除</span></div></div>
+    <input type="file" name="excelFile" id="excelFile" class="btn btn-default"  multiple="multiple" onchange="fileUpload()" style="display: none">
+    <div id="import" onclick="selectFile()"><div class="caozuobox"><img src="img/table/import.png"></div><div class="caozuobox"><span>导入</span></div></div>
+    <div id="export"><div class="caozuobox"><img src="img/table/export.png"></div><div class="caozuobox"><span>导出</span></div></div>
+    <div id="chaxun"><div class="caozuobox"><img src="img/table/chaxun.png"></div><div class="caozuobox"><span>高级查询</span></div></div>
+</div>
+<div id="mainbox">
+    <div id="titlebox"><span>区-镇(社区)管理</span></div>
+    <div id="tabletopbox">
+        <div class="tishibox"><img src="img/tishi.png"></div>
+        <div class="tishibox"><span style="margin-left: 10px">查询结果(共</span><span id="number"></span><span>条信息)</span></div>
+    </div>
+    <div id="tablebox">
+        <table id="table"
+               data-toolbar="#toolbar"
+               data-show-export="true"
+               data-pagination="false"
+               data-page-list="[10, 25, 50, 100, ALL]"
+               data-id-field="id"
+               data-side-pagination="server"
+               data-url="../action"
+               data-query-params="queryParams"
+               data-query-params-type="limit">
+        </table>
+    </div>
+</div>
+<div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width: 70vw;">
+    <div class="modal-dialog" style="width: 70vw">
+        <div class="modal-content" style="border-radius: 15px;width: 100%;">
+            <div class="modal-header" style="background-color:white;color: black;border-top-left-radius: 15px;border-top-right-radius: 15px">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="CloseModalBackground1()">
+                    &times;
+                </button>
+                <h4 class="modal-title">区/镇信息报备</h4>
+            </div>
+
+            <div class="modal-body" style="width: 100%;float:left;background-color: #F3F3F3;height: auto" id="xq">
+<!--                <div class="hang">-->
+<!--                    <span class="hangtitle">创建时间</span><br>-->
+<!--                    <input id="createtime" class="hanginput"/>-->
+<!--                </div>-->
+<!--                <div class="hang">-->
+<!--                    <span class="hangtitle">id</span><br>-->
+<!--                    <input id="id1" class="hanginput"/>-->
+<!--                </div>-->
+                <div class="hang">
+                    <span class="hangtitle">区/镇名称</span><br>
+                    <input id="name1" class="hanginput"/>
+                </div>
+                <div class="hang">
+                    <span class="hangtitle">上级id</span><br>
+                    <input id="oid1" class="hanginput"/>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align: center">
+                <button id="ShangBao1" class="btn">确定</button>
+                <button id="QuXiao" onclick="CloseModalBackground1()" class="btn">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width: 70vw;">
+    <div class="modal-dialog" style="width: 70vw">
+        <div class="modal-content" style="border-radius: 15px;width: 100%;">
+            <div class="modal-header" style="background-color:white;color: black;border-top-left-radius: 15px;border-top-right-radius: 15px">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="CloseModalBackground2()">
+                    &times;
+                </button>
+                <h4 class="modal-title">区/镇信息修改</h4>
+            </div>
+
+            <div class="modal-body" style="width: 100%;float:left;background-color: #F3F3F3;height: auto" id="xq1">
+                <!-- <div style="width: 100%;height: 40px" id="but">
+                     <button id="ShangBao1" class="btn btnleft">上报</button>
+                     <button id="QuXiao" class="btn btnright">取消</button>
+                 </div>-->
+                <div class="hang">
+                    <span class="hangtitle">创建时间</span><br>
+                    <input id="createtime" class="hanginput"/>
+                </div>
+                <div class="hang">
+                    <span class="hangtitle">id</span><br>
+                    <input id="id" class="hanginput"/>
+                </div>
+                <div class="hang">
+                    <span class="hangtitle">区/镇名称</span><br>
+                    <input id="name" class="hanginput"/>
+                </div>
+                <div class="hang">
+                    <span class="hangtitle">上级id</span><br>
+                    <input id="oid" class="hanginput"/>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align: center">
+                <button id="ShangBao2" class="btn">确定</button>
+                <button id="QuXiao1" onclick="CloseModalBackground2()" class="btn">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width: 70vw;">
+    <div class="modal-dialog" style="width: 70vw">
+        <div class="modal-content" style="border-radius: 15px;width: 100%;">
+            <div class="modal-header" style="background-color:white;color: black;border-top-left-radius: 15px;border-top-right-radius: 15px">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="CloseModalBackground3()">
+                    &times;
+                </button>
+                <h4 class="modal-title">区/镇信息查询</h4>
+            </div>
+
+            <div class="modal-body" style="width: 100%;float:left;background-color: #F3F3F3;height: auto" id="xq2">
+                <div class="hang">
+                    <span class="hangtitle">创建时间</span><br>
+                    <input id="createtime3" class="hanginput"/>
+                </div>
+                <div class="hang">
+                    <span class="hangtitle">id</span><br>
+                    <input id="id3" class="hanginput"/>
+                </div>
+                <div class="hang">
+                    <span class="hangtitle">区/镇名称</span><br>
+                    <input id="name3" class="hanginput"/>
+                </div>
+                <div class="hang">
+                    <span class="hangtitle">上级id</span><br>
+                    <input id="oid3" class="hanginput"/>
+                </div>
+            </div>
+            <div class="modal-footer Mfooter" style="text-align: center">
+                <button id="QuXiao3"  onclick="CloseModalBackground3()" class="btn">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script>
+    var svcHeader = Constants.path
+    var qyid = localStorage.getItem('qyid');
+    $(function () {
+        //1.初始化Table
+        var oTable = new TableInit();
+        oTable.Init();
+        //
+        // //2.初始化Button的点击事件
+        // var oButtonInit = new ButtonInit();
+        // oButtonInit.Init();
+    });
+    function CloseModalBackground1() {
+        $("#myModal1").modal('hide');
+    }
+    function CloseModalBackground2() {
+        $("#myModal2").modal('hide');
+    }
+    function CloseModalBackground3() {
+        $("#myModal3").modal('hide');
+    }
+    var TableInit = function () {
+        var oTableInit = new Object();
+        //初始化Table
+        oTableInit.Init = function () {
+            $('#table').bootstrapTable({
+                url: svcHeader+'/pb/quzhens/action/search',         //请求后台的URL（*）
+                method: 'get',                      //请求方式（*）
+                toolbar: '#toolbar',                //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                sortable: false,                     //是否启用排序
+                sortOrder: "asc",                   //排序方式
+                queryParams: oTableInit.queryParams,//传递参数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                pageSize: 10,                       //每页的记录行数（*）
+                pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+                // search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                // strictSearch: true,
+                smartDisplay: false,
+                // showColumns: true,                  //是否显示所有的列
+                // showRefresh: true,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: true,                //是否启用点击选中行
+                //height: 500,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "ID",                     //每一行的唯一标识，一般为主键列
+                // showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+                cardView: false,                    //是否显示详细视图
+                detailView: false,                   //是否显示父子表
+                responseHandler:responseHandler,
+                columns: [{
+                    checkbox: true
+                },
+                    {
+                        field: 'createtime',
+                        align: 'center',
+                        title: '创建时间'
+                    }, {
+                        field: 'id',
+                        align: 'center',
+                        title: 'id'
+                    },{
+                        field: 'name',
+                        align: 'center',
+                        title: '区/镇名称'
+                    },{
+                        field: 'oid',
+                        align: 'center',
+                        title: '上级id'
+                    },
+                ],
+            });
+            initTableHeight()
+        }
+        oTableInit.queryParams = function (params) {
+            var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                pageNo:params.offset/params.limit+1,
+                pageSize:params.limit,
+                // qyid:qyid
+            };
+            return temp;
+        };
+        return oTableInit;
+    };
+    function   responseHandler(res) {
+        $("#number").text(res.data.count)
+        return {
+            "rows": res.data.entities,
+            "total":res.data.count
+            //数据
+        }
+    }
+
+    //新增
+    $('body').on('hidden.bs.modal', '.modal', function () {
+        $("#createtime").val('');
+        $("#id").val('');
+        $("#name1").val('');
+        $("#oid1").val('');
+    })
+    $("#add").unbind('click').click(function () {
+        $("#myModal1").modal('show');
+    })
+    $("#ShangBao1").unbind('click').click(function () {
+        if($("#name1").val()==''||$("#id1").val()==''||$("#oid1").val()==''){
+            alert("信息不完整，请重新输入！")
+        }  else{
+            var obj = {
+                'createtime': $("#createtime").val(),
+                'id': $("#id").val(),
+                'name':$("#name1").val(),
+                'oid':$("#oid1").val(),
+                'qyid': qyid,
+            };
+            $.ajax({
+                url:svcHeader+"/pv/quzhens",
+                dataType:'json',
+                type:'POST',
+                contentType: 'application/json',
+                data:JSON.stringify(obj),
+                success:function (data) {
+                    alert("新增成功！")
+                    $("#myModal1").modal('hide');
+                    $("#table").bootstrapTable('destroy');
+                    var oTable = new TableInit();
+                    oTable.Init();
+                }
+            })
+        }
+    })
+    //删除
+    $("#delete").unbind('click').click(function(){
+        var row = $.map($('#table').bootstrapTable(
+            'getSelections'), function(row) {
+            return row;
+        })
+        var x=row.length;
+        var msg="删除";
+        var y=0;
+        var z=0;
+        if(row.length==0){
+            alert("请选择要删除的数据！")
+        }else{
+            for(var i=0;i<row.length;i++) {
+                $.ajax({
+                    url: svcHeader + "delete/quzhens/"+row[i].id,
+                    // dataType: 'json',
+                    type: 'delete',
+                    async: false,
+                    success: function (data) {
+                        if(data.result==true){
+                            y=y+1;
+                        }else{
+                            z=z+1;
+                        }
+                        if(y==x){
+                            alert('已成功删除' + y + "条！")
+                        }
+                        $("#table").bootstrapTable('destroy');
+                        var oTable = new TableInit();
+                        oTable.Init();
+                    }
+                })
+            }
+            if(y!=x){
+                alert('已成功删除' + z + "条！失败"+y+'条！')
+            }
+        }
+    })
+    //修改
+    $("#update").unbind('click').click(function(){
+        var row = $.map($('#table').bootstrapTable(
+            'getSelections'), function(row) {
+            return row;
+        });
+        if(row.length==1){
+                $("#myModal2").modal('show');
+                $("#createtime").val(row[0].createtime);
+                $("#id").val(row[0].id);
+                $("#name").val(row[0].name);
+                $("#oid").val(row[0].oid);
+                $("#ShangBao2").unbind('click').click(function () {
+                    var obj = {
+                        'id':row[0].id,
+                        'createtime': $("#createtime").val(),
+                        'name':$("#name").val(),
+                        'oid':$("#oid").val(),
+                    };
+                    $.ajax({
+                        url: svcHeader + "/pv/quzhens/"+row[0].id,
+                        dataType: 'json',
+                        type: 'put',
+                        contentType: 'application/json',
+                        data: JSON.stringify(obj),
+                        success: function (data) {
+                            alert('修改成功！')
+                            $("#myModal2").modal('hide');
+                            $("#table").bootstrapTable('destroy');
+                            var oTable = new TableInit();
+                            oTable.Init();
+                        }
+                    })
+                })
+        }else{
+            alert("只能选择一条")
+        }
+    })
+    //查询
+    $("#chaxun").unbind('click').click(function(){
+        var row = $.map($('#table').bootstrapTable(
+            'getSelections'), function(row) {
+            return row;
+        });
+        $.ajax({
+            url:svcHeader+"/pb/quzhens/"+row[0].id,
+            dataType:'json',
+            type:'get',
+            contentType: 'application/json',
+            success:function (data) {
+                console.log(data);
+                 $("#myModal3").modal('show');
+                    $("#createtime3").val(row[0].createtime);
+                    $("#id3").val(row[0].id);
+                    $("#name3").val(row[0].name);
+                    $("#oid3").val(row[0].oid);
+            }
+        })
+    })
+
+
+
+    $("#export").click(function () {
+        window.location.href=svcHeader+"quzhens/export?qyid="+qyid
+    })
+    function selectFile(){
+        $("#excelFile").trigger("click");
+    }
+    function fileUpload() {
+        var file=document.getElementById("excelFile");
+        var fileObj = file.files[0];
+        var formdata = new FormData();
+        formdata.append('file',fileObj);
+        //console.log(formdata)
+        $.ajax({
+            url: svcHeader + "quzhens/import",//这里写你的url
+            type: 'POST',
+            data:formdata,
+            processData:false,
+            contentType:false,
+            success: function (map) {
+                alert("上传成功!");
+                $("#table").bootstrapTable('refresh');
+            },
+            error: function (data) {
+                alert("页面请求失败！");
+            }
+        })
+    }
+</script>
+
+</html>

@@ -1,0 +1,82 @@
+body,html{
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+    overflow-x: hidden;
+}
+.titlebox{
+    width: 100%;
+    height:120px;
+    background-color: #F8F8F8;
+    border-bottom: 1px solid #eee;
+    font-size: 40px;
+    line-height: 120px;
+    padding-left: 3%;
+    color: #333;
+}
+.buttonbox{
+    width: 100%;
+    height: 140px;
+    border-bottom: 1px solid #eee;
+    padding-top: 50px;
+}
+.btn{
+    width: 15%;
+    height: 80px;
+    background-color: #48b0f7;
+    border: 1px solid #48b0f7;
+    color: #fff;
+    font-size: 35px;
+    float: left;
+}
+.btnleft{
+    margin-left: 5%;
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
+}
+.btnright{
+    border-bottom-right-radius: 5px;
+    border-top-right-radius: 5px;
+}
+.infobox{
+    width: 100%;
+    height: auto;
+    margin-top: 20px;
+    margin-bottom: 50px;
+}
+.infobox div{
+    margin-top: 50px;
+}
+.infobox div span{
+    color: #616A78;
+    font-weight: 400;
+    font-size: 30px;
+    letter-spacing: .5px;
+    margin-left: 5%;
+}
+.infobox input{
+    width: 89%;
+    height: 55px;
+    margin-left: 5%;
+    margin-top: 20px;
+    border: 1px solid #b7c2d4;
+    font-size: 30px;
+    color: #929daf;
+    padding: 1%;
+    border-radius: 5px;
+}
+.infobox select{
+    width: 91%;
+    height: 75px;
+    margin-left: 5%;
+    margin-top: 20px;
+    border: 1px solid #b7c2d4;
+    font-size: 30px;
+    color: #929daf;
+    border-radius: 5px;
+}
+input::-webkit-input-placeholder {
+    color: #b7c3d5;
+    font-size: 30px;
+}

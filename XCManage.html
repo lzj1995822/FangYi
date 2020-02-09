@@ -1,0 +1,558 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>行程报备</title>
+    <link rel="stylesheet" href="css/table1.css">
+    <link rel="stylesheet" href="css/mulu.css">
+    <link rel="stylesheet" href="css/element.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/0_common/bootstrap-table.css">
+    <script src="css/jquery.min.js"></script>
+    <script src="css/vue.js"></script>
+    <script src="css/element.js"></script>
+    <script src="js/table.js"></script>
+    <script src="js/0_common/bootstrap.min.js"></script>
+    <script src="js/0_common/bootstrap-table.js"></script>
+    <script src="js/constants.js"></script>
+    <script src="js/YZidCard.js"></script>
+
+</head>
+<body>
+<div class="dqy"><span>当前页：行程报备</span></div>
+<div id="dhmenu">
+    <div id="add"><div class="caozuobox"><img src="img/table/add.png"></div><div class="caozuobox"><span>新增</span></div></div>
+    <div id="update"><div class="caozuobox"><img src="img/table/update.png"></div><div class="caozuobox"><span>修改</span></div></div>
+    <div id="delete"><div class="caozuobox"><img src="img/table/delete.png"></div><div class="caozuobox"><span>删除</span></div></div>
+    <div id="shangbao"><div class="caozuobox"><img src="img/table/shangbao.png"></div><div class="caozuobox"><span>上报</span></div></div>
+    <div id="qbshangbao"><div class="caozuobox"><img src="img/table/qbshangbao.png"></div><div class="caozuobox"><span>全部上报</span></div></div>
+    <input type="file" name="excelFile" id="excelFile" class="btn btn-default"  multiple="multiple" onchange="fileUpload()" style="display: none">
+    <div id="import" onclick="selectFile()"><div class="caozuobox"><img src="img/table/import.png"></div><div class="caozuobox"><span>导入</span></div></div>
+    <div id="export"><div class="caozuobox"><img src="img/table/export.png"></div><div class="caozuobox"><span>导出</span></div></div>
+    <button id="btn_search"></button>
+    <input id="key" class="form-control" style="width:15%;height:23px;float:right;margin-top:0.8%;margin-right: 2%"/>
+</div>
+<div id="mainbox">
+    <div id="titlebox"><span>行程报备</span></div>
+    <div id="tabletopbox">
+        <div class="tishibox"><img src="img/tishi.png"></div>
+        <div class="tishibox"><span style="margin-left: 10px">查询结果(共</span><span id="number"></span><span>条信息)</span></div>
+    </div>
+    <div id="tablebox">
+        <table id="table"
+               data-toolbar="#toolbar"
+               data-show-export="true"
+               data-pagination="false"
+               data-page-list="[10, 25, 50, 100, ALL]"
+               data-id-field="id"
+               data-side-pagination="server"
+               data-url="../action"
+               data-query-params="queryParams"
+               data-query-params-type="limit">
+        </table>
+    </div>
+</div>
+<div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width: 70vw;">
+    <div class="modal-dialog" style="width: 70vw">
+        <div class="modal-content" style="border-radius: 15px;width: 100%;">
+            <div class="modal-header" style="background-color:white;color: black;border-top-left-radius: 15px;border-top-right-radius: 15px">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="CloseModalBackground()">
+                    &times;
+                </button>
+                <h4 class="modal-title">员工行程信息报备</h4>
+            </div>
+
+            <div class="modal-body" style="width: 100%;float:left;background-color: #F3F3F3;height: auto" id="xq">
+                <!-- <div style="width: 100%;height: 40px" id="but">
+                     <button id="ShangBao1" class="btn btnleft">上报</button>
+                     <button id="QuXiao" class="btn btnright">取消</button>
+                 </div>-->
+                <div class="hang">
+                    <span class="hangtitle">员工姓名</span><br>
+                    <input id="name" class="hanginput"/>
+                </div>
+                <div class="hang">
+                    <span class="hangtitle">身份证/护照</span><br>
+                    <input id="idcard" class="hanginput"/>
+                </div>
+                <div class="hang">
+                    <span class="hangtitle">出发日期</span><br>
+                    <input id="cfdate" class="hanginput" type="date"/>
+                </div>
+                <div class="hang">
+                    <span class="hangtitle">到达日期</span><br>
+                    <input id="dddate" class="hanginput" type="date"/>
+                </div>
+                <div class="hang">
+                    <span class="hangtitle">出发地点</span><br>
+                    <input id="cfaddress" class="hanginput"/>
+                </div>
+                <div class="hang">
+                    <span class="hangtitle">到达地点</span><br>
+                    <input id="daaddress" class="hanginput"/>
+                </div>
+                <div class="hang">
+                    <span class="hangtitle">出行方式</span><br>
+                    <input id="cxfangshi" class="hanginput"/>
+                </div>
+                <div class="hang">
+                    <span class="hangtitle">是否返程复工</span><br>
+                    <select id="sffugong" class="hanginput">
+                        <option value="是">是</option>
+                        <option value="否">否</option>
+                    </select>
+                </div>
+                <div class="hang">
+                    <span class="hangtitle">疫情期间是否途经(到达)疫区</span><br>
+                    <input id="sftujingyq" placeholder="请输入途经地点" class="hanginput"/>
+                </div>
+                <div class="hang">
+                    <span class="hangtitle">备注说明</span><br>
+                    <input id="beizhu" class="hanginput"/>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align: center">
+                <button id="ShangBao1" class="btn">保存</button>
+                <button id="QuXiao" data-dismiss="modal" class="btn">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width: 70vw;">
+    <div class="modal-dialog" style="width: 70vw">
+        <div class="modal-content" style="border-radius: 15px;width: 100%;">
+            <div class="modal-header" style="background-color:white;color: black;border-top-left-radius: 15px;border-top-right-radius: 15px">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="CloseModalBackground()">
+                    &times;
+                </button>
+                <h4 class="modal-title">员工行程信息报备</h4>
+            </div>
+
+            <div class="modal-body" style="width: 100%;float:left;background-color: #F3F3F3;height: auto" id="xq1">
+                <!-- <div style="width: 100%;height: 40px" id="but">
+                     <button id="ShangBao1" class="btn btnleft">上报</button>
+                     <button id="QuXiao" class="btn btnright">取消</button>
+                 </div>-->
+                <div class="hang">
+                    <span class="hangtitle">员工姓名</span><br>
+                    <input id="name1" class="hanginput"/>
+                </div>
+                <div class="hang">
+                    <span class="hangtitle">身份证/护照</span><br>
+                    <input id="idcard1" class="hanginput"/>
+                </div>
+                <div class="hang">
+                    <span class="hangtitle">出发日期</span><br>
+                    <input id="cfdate1" class="hanginput" type="date"/>
+                </div>
+                <div class="hang">
+                    <span class="hangtitle">到达日期</span><br>
+                    <input id="dddate1" class="hanginput" type="date"/>
+                </div>
+                <div class="hang">
+                    <span class="hangtitle">出发地点</span><br>
+                    <input id="cfaddress1" class="hanginput"/>
+                </div>
+                <div class="hang">
+                    <span class="hangtitle">到达地点</span><br>
+                    <input id="daaddress1" class="hanginput"/>
+                </div>
+                <div class="hang">
+                    <span class="hangtitle">出行方式</span><br>
+                    <input id="cxfangshi1" class="hanginput"/>
+                </div>
+                <div class="hang">
+                    <span class="hangtitle">是否返程复工</span><br>
+                    <select id="sffugong1" class="hanginput">
+                        <option value="是">是</option>
+                        <option value="否">否</option>
+                    </select>
+                </div>
+                <div class="hang">
+                    <span class="hangtitle">疫情期间是否途经(到达)疫区</span><br>
+                    <input id="sftujingyq1" placeholder="请输入途经地点" class="hanginput"/>
+                </div>
+                <div class="hang">
+                    <span class="hangtitle">备注说明</span><br>
+                    <input id="beizhu1" class="hanginput"/>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align: center">
+                <button id="ShangBao2" class="btn">保存</button>
+                <button id="QuXiao1" data-dismiss="modal" class="btn">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    var svcHeader = Constants.path
+    var qyid = localStorage.getItem('qyid');
+    $(function () {
+        //1.初始化Table
+        var oTable = new TableInit();
+        oTable.Init();
+        //
+        // //2.初始化Button的点击事件
+        // var oButtonInit = new ButtonInit();
+        // oButtonInit.Init();
+    });
+    var TableInit = function () {
+        var oTableInit = new Object();
+        //初始化Table
+        oTableInit.Init = function () {
+            $('#table').bootstrapTable({
+                url: svcHeader+'pb/xcxxs/action/findByKey',         //请求后台的URL（*）
+                method: 'get',                      //请求方式（*）
+                toolbar: '#toolbar',                //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                sortable: false,                     //是否启用排序
+                sortOrder: "asc",                   //排序方式
+                queryParams: oTableInit.queryParams,//传递参数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                pageSize: 10,                       //每页的记录行数（*）
+                pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+                // search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                // strictSearch: true,
+                // showColumns: true,                  //是否显示所有的列
+                // showRefresh: true,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: true,                //是否启用点击选中行
+                //height: 500,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "ID",                     //每一行的唯一标识，一般为主键列
+                // showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+                cardView: false,                    //是否显示详细视图
+                detailView: false,                   //是否显示父子表
+                responseHandler:responseHandler,
+                columns: [{
+                    checkbox: true
+                },
+                   {
+                        field: 'name',
+                        align: 'center',
+                        title: '员工姓名'
+                    },{
+                        field: 'idcard',
+                        align: 'center',
+                        title: '身份证号码/护照'
+                    },{
+                        field: 'cfaddress',
+                        align: 'center',
+                        title: '出发地点'
+                    },{
+                        field: 'cfdate',
+                        align: 'center',
+                        title: '出发日期'
+                    },{
+                        field: 'daaddress',
+                        align: 'center',
+                        title: '到达地点'
+                    },{
+                        field: 'dddate',
+                        align: 'center',
+                        title: '到达日期'
+                    },{
+                        field: 'cxfangshi',
+                        align: 'center',
+                        title: '出行方式'
+                    },{
+                        field: 'sffugong',
+                        align: 'center',
+                        title: '是否返程复工'
+                    },{
+                        field: 'sftujingyq',
+                        align: 'center',
+                        title: '疫情期间是否途径（到达）疫区'
+                    },{
+                        field: 'beizhu',
+                        align: 'center',
+                        title: '备注说明'
+                    },{
+                        field: 'status',
+                        align: 'center',
+                        title: '状态',
+                        formatter : function(value, row, index) {
+                            var a = "";
+                            if(row.status=='0') {
+                                var a = '未上报';
+                            }else if(row.status=='1'){
+                                var a = '已上报';
+                            }
+                            return a;
+                        },
+                    },
+                ],
+            });
+            initTableHeight()
+        }
+        oTableInit.queryParams = function (params) {
+            var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                pageNo:params.offset+1,
+                pageSize:params.limit,
+                qyid:qyid,
+                key:$("#key").val(),
+            };
+            return temp;
+        };
+        return oTableInit;
+    };
+    function   responseHandler(res) {
+        $("#number").text(res.data.count)
+        return {
+            "rows": res.data.entities,
+            "total":res.data.count
+            //数据
+        }
+    }
+
+    //新增
+    $('body').on('hidden.bs.modal', '.modal', function () {
+        $("#name").val('');
+        $("#idcard").val('');
+        $("#cfdate").val('');
+        $("#dddate").val('');
+        $("#cfaddress").val('');
+        $("#daaddress").val('');
+        $("#cxfangshi").val('');
+        $("#sffugong").val('是');
+        $("#sftujingyq").val('');
+        $("#beizhu").val('');
+    })
+    $("#add").unbind('click').click(function () {
+        $("#myModal1").modal('show');
+    })
+    $("#ShangBao1").unbind('click').click(function () {
+        var sfzjy = IdentityCodeValid($("#idcard").val())
+        if($("#name").val()==''||$("#bbdate").val()==''||$("#tiwen").val()==''){
+            alert("信息不完整，请重新输入！")
+        }else if(sfzjy=='false'){
+            alert("身份证/护照信息不正确，请重新输入")
+        } else{
+            var obj = {
+                'beizhu': $("#beizhu").val(),
+                'cfaddress': $("#cfaddress").val(),
+                'cfdate': $("#cfdate").val(),
+                'cxfangshi': $("#cxfangshi").val(),
+                'daaddress': $("#daaddress").val(),
+                'dddate': $("#dddate").val(),
+                'idcard': $("#idcard").val(),
+                'name': $("#name").val(),
+                'qyid': qyid,
+                'sffugong': $("#sffugong").val(),
+                'sftujingyq': $("#sftujingyq").val(),
+                'status': "0",
+            };
+            $.ajax({
+                url:svcHeader+"pv/xcxxs",
+                dataType:'json',
+                type:'POST',
+                contentType: 'application/json',
+                data:JSON.stringify(obj),
+                success:function (data) {
+                    if(data.code=="200"){
+                        alert("新增成功！")
+                        $("#myModal1").modal('hide');
+                        $("#table").bootstrapTable('destroy');
+                        var oTable = new TableInit();
+                        oTable.Init();
+                    }else{
+                        alert(data.msg)
+                    }
+
+                }
+            })
+        }
+    })
+    //删除
+    $("#delete").unbind('click').click(function(){
+        var row = $.map($('#table').bootstrapTable(
+            'getSelections'), function(row) {
+            return row;
+        })
+        var x=row.length;
+        var msg="删除";
+        var y=0;
+        var z=0;
+        if(row.length==0){
+            alert("请选择要删除的数据！")
+        }else{
+            for(var i=0;i<row.length;i++) {
+                $.ajax({
+                    url: svcHeader + "/delete/xcxxs/"+row[i].id,
+                    // dataType: 'json',
+                    type: 'delete',
+                    async: false,
+                    success: function (data) {
+                        if(data.code=='200'){
+                            y=y+1;
+                        }else{
+                            z=z+1;
+                        }
+                        if(y==x){
+                            alert('已成功删除' + y + "条！")
+                        }
+                        $("#table").bootstrapTable('destroy');
+                        var oTable = new TableInit();
+                        oTable.Init();
+                    }
+                })
+            }
+            if(y!=x){
+                alert('已成功删除' + z + "条！失败"+y+'条！')
+            }
+        }
+    })
+    //修改
+    $("#update").unbind('click').click(function(){
+        var row = $.map($('#table').bootstrapTable(
+            'getSelections'), function(row) {
+            return row;
+        });
+        if(row.length==1){
+            if(row[0].status=='0'){
+                $("#myModal2").modal('show');
+                $("#name1").val(row[0].name);
+                $("#idcard1").val(row[0].idcard);
+                $("#cfdate1").val(row[0].cfdate);
+                $("#dddate1").val(row[0].dddate);
+                $("#cfaddress1").val(row[0].cfaddress);
+                $("#daaddress1").val(row[0].daaddress);
+                $("#cxfangshi1").val(row[0].cxfangshi);
+                $("#sffugong1").val(row[0].sffugong);
+                $("#sftujingyq1").val(row[0].sftujingyq);
+                $("#beizhu1").val(row[0].beizhu);
+
+                $("#ShangBao2").unbind('click').click(function () {
+                    var obj = {
+                        'id':row[0].id,
+                        'beizhu': $("#beizhu1").val(),
+                        'cfaddress': $("#cfaddress1").val(),
+                        'cfdate': $("#cfdate1").val(),
+                        'cxfangshi': $("#cxfangshi1").val(),
+                        'daaddress': $("#daaddress1").val(),
+                        'dddate': $("#dddate1").val(),
+                        'idcard': $("#idcard1").val(),
+                        'name': $("#name1").val(),
+                        'qyid': qyid,
+                        'sffugong': $("#sffugong1").val(),
+                        'sftujingyq': $("#sftujingyq1").val(),
+                        'status': "0",
+                    };
+
+                    $.ajax({
+                        url: svcHeader + "/pv/xcxxs/"+row[0].id,
+                        dataType: 'json',
+                        type: 'put',
+                        contentType: 'application/json',
+                        data: JSON.stringify(obj),
+                        success: function (data) {
+                            if(data.code=="200") {
+                                alert('修改成功！')
+                                $("#myModal2").modal('hide');
+                                $("#table").bootstrapTable('destroy');
+                                var oTable = new TableInit();
+                                oTable.Init();
+                            }else{
+                                alert(data.msg)
+                            }
+                        }
+                    })
+                })
+            }else {
+                alert("该条数据已上报，不能修改！")
+            }
+        }else{
+            alert("只能选择一条")
+        }
+    })
+    //全部上报
+    $("#qbshangbao").unbind('click').click(function(){
+        var obj = {
+            'qyid': qyid,
+        }
+        $.ajax({
+            url: svcHeader + "/pv/xcplxxs",
+            dataType: 'json',
+            type: 'put',
+            contentType: 'application/json',
+            data: JSON.stringify(obj),
+            success: function (data) {
+                alert('上报成功！')
+                $("#table").bootstrapTable('destroy');
+                var oTable = new TableInit();
+                oTable.Init();
+            }
+        })
+
+    })
+
+    $("#shangbao").unbind('click').click(function(){
+        var row = $.map($('#table').bootstrapTable(
+            'getSelections'), function(row) {
+            return row;
+        });
+        if(row.length==1){
+            var obj = {
+                'id':row[0].id,
+                'status':'1',
+            };
+
+            $.ajax({
+                url: svcHeader + "pv/xcxxs/"+row[0].id,
+                dataType: 'json',
+                type: 'put',
+                contentType: 'application/json',
+                data: JSON.stringify(obj),
+                success: function (data) {
+                    alert('修改成功！')
+                    $("#myModal2").modal('hide');
+                    $("#table").bootstrapTable('destroy');
+                    var oTable = new TableInit();
+                    oTable.Init();
+                }
+            })
+        }else{
+            alert("只能选择一条")
+        }
+    })
+
+    $("#btn_search").unbind('click').click(function () {
+        $("#table").bootstrapTable('destroy');
+        var oTable = new TableInit();
+        oTable.Init();
+    })
+
+    $("#export").click(function () {
+        window.location.href=svcHeader+"xcxxs/export?qyid="+qyid
+    })
+    function selectFile(){
+        $("#excelFile").trigger("click");
+    }
+    function fileUpload() {
+        var file=document.getElementById("excelFile");
+        var fileObj = file.files[0];
+        var formdata = new FormData();
+        formdata.append('file',fileObj);
+        formdata.append('qyid',qyid);
+        //console.log(formdata)
+        $.ajax({
+            url: svcHeader + "xcxxs/import",//这里写你的url
+            type: 'POST',
+            data:formdata,
+            processData:false,
+            contentType:false,
+            success: function (map) {
+                alert("上传成功!");
+                $("#table").bootstrapTable('refresh');
+            },
+            error: function (data) {
+                alert("页面请求失败！");
+            }
+        })
+    }
+</script>
+
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>企业主页</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/element.css">
+    <script src="css/jquery.min.js"></script>
+    <script src="css/vue.js"></script>
+    <script src="css/element.js"></script>
+    <script src="js/constants.js"></script>
+</head>
+<body>
+<div id="header">
+    <div id="dp">
+        <span id="ksh">二维码下载</span>
+    </div>
+    <div id="uk">
+        <img src="img/yh.png" style="width: 15%"/>
+        <span id="yh">用户&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <span id="user">苏州佳图智慧信息技术有限公司</span>
+    </div>
+    <a href="login.html"><div id="exit">
+        <img src="img/exit.png" style="width: 20%">
+        <span id="tc">退出系统</span>
+    </div></a>
+    <!--<span id="title">&nbsp;&nbsp;&nbsp;&nbsp;苏信学院平安校园综合管理和服务平台</span>-->
+    <!--<img src="../img/tou.png" style="width: 3%" id="tou"/><span id="user">admin</span>-->
+</div>
+<div id="mainbody">
+    <div id="left">
+        <div style="width: 100%;margin-top: 5%">
+            <img id="dhImg" onclick="ss()" src="img/mulu.png" style="width: 11%;padding-left: 7%;margin-left: 10%;cursor: pointer"/>
+            <span slot="title" id="toptitle">&nbsp;导航目录</span>
+        </div>
+        <div id="menu">
+            <el-menu
+                    default-active="QYManage.html"
+                    class="el-menu-vertical-demo"
+                    @select="handleSelect"
+            >
+                <el-menu-item index="FGSH.html">
+                    <!--<i class="el-icon-menu"></i>-->
+                    &nbsp;&nbsp;&nbsp;<img src="img/qysqxz.png" class="mlogo" id="1"/>
+                    <span slot="title">&nbsp;&nbsp;&nbsp;企业复工申请审核</span>
+                </el-menu-item>
+                <el-menu-item index="AdminManage.html">
+                    <!--<i class="el-icon-menu"></i>-->
+                    &nbsp;&nbsp;&nbsp;<img src="img/yg.png" class="mlogo" id="2"/>
+                    <span slot="title">&nbsp;&nbsp;&nbsp;审核人员管理</span>
+                </el-menu-item>
+                <el-menu-item index="CommunityManage.html">
+                    <!--<i class="el-icon-menu"></i>-->
+                    &nbsp;&nbsp;&nbsp;<img src="img/jk.png" class="mlogo" id="3"/>
+                    <span slot="title">&nbsp;&nbsp;社区管理</span>
+                </el-menu-item>
+<!--                <el-menu-item index="XCManage.html">-->
+<!--                    &lt;!&ndash;<i class="el-icon-menu"></i>&ndash;&gt;-->
+<!--                    &nbsp;&nbsp;&nbsp;<img src="" class="mlogo" id="4"/>-->
+<!--                    <span slot="title">&nbsp;&nbsp;&nbsp;</span>-->
+<!--                </el-menu-item>-->
+<!--                <el-menu-item index="QYBA.html">-->
+<!--                    &lt;!&ndash;<i class="el-icon-menu"></i>&ndash;&gt;-->
+<!--                    &nbsp;&nbsp;&nbsp;<img src="" class="mlogo" id="5"/>-->
+<!--                    <span slot="title">&nbsp;&nbsp;&nbsp;</span>-->
+<!--                </el-menu-item>-->
+            </el-menu>
+        </div>
+
+    </div>
+    <iframe id="right" src="FGSH.html">
+    </iframe>
+</div>
+<script>
+    var name = localStorage.getItem('qymc');
+    var pic = localStorage.getItem('pic');
+    var svcHeader = Constants.path;
+    var qyid = localStorage.getItem('qyid');
+    if(name==""||name==null||name==undefined){
+        window.location.href="onlyLogin.html";
+    }else if (name.length> 5) {//循环判断cutelement中含有的字数
+        name = name.substring(0, 5) + "...";//如果字数超过，则截取内容，拼接上“...”显示
+    }
+    $('#user').html(name);
+    $("#dp").click(function (){
+        $.ajax({
+            url: svcHeader + "pb/orcode/sc/"+qyid,
+            dataType: 'json',
+            type: 'get',
+            success: function (data) {
+                console.log(data)
+            },error:function (data) {
+                console.log(data,'aaa')
+                var pic=data.responseText;
+                localStorage.setItem('pic',pic);
+                window.open(svcHeader+'FUGONGP/'+pic);
+            }
+        })
+
+    })
+    window.vueIns=new Vue({
+        el: '#left',
+        data:function() {
+            return {
+            };
+        },
+        methods: {
+            handleSelect:function(key, keyPath,title) {
+                if(key=="FGSH.html"){
+                    document.getElementById('1').src="img/qysqxz.png"
+                    document.getElementById('2').src="img/yg.png"
+                    document.getElementById('3').src="img/jk.png"
+
+                    document.getElementById('right').src="FGSH.html"
+                }else if(key=="AdminManage.html"){
+                    document.getElementById('1').src="img/qysq.png"
+                    document.getElementById('2').src="img/ygxz.png"
+                    document.getElementById('3').src="img/jk.png"
+
+                    document.getElementById('right').src="AdminManage.html"
+                    // document.getElementById("right").src="../Map/map.html";
+                }else if(key=="CommunityManage.html"){
+                    document.getElementById('1').src="img/qysq.png"
+                    document.getElementById('2').src="img/yg.png"
+                    document.getElementById('3').src="img/jkxz.png"
+
+                    document.getElementById('right').src="CommunityManage.html"
+                    // document.getElementById("right").src="../Map/map.html";
+                }else if(key=="XCManage.html"){
+                    document.getElementById('1').src="img/qysq.png"
+                    document.getElementById('2').src="img/yg.png"
+                    document.getElementById('3').src="img/jk.png"
+
+                    document.getElementById('right').src="XCManage.html"
+                    // document.getElementById("right").src="../Map/map.html";
+                }else if(key=="QYBA.html"){
+                    document.getElementById('1').src="img/qysq.png"
+                    document.getElementById('2').src="img/yg.png"
+                    document.getElementById('3').src="img/jk.png"
+
+                    document.getElementById('right').src="QYBA.html"
+                    // document.getElementById("right").src="../Map/map.html";
+                }
+            },
+
+
+        },
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+html,body{
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    background-color: #F6F7FB!important;
+}
+*{
+    font-family:Microsoft YaHei;
+}
+
+/*当前页*/
+#dangqianye{
+    width: 96%;
+    height: 5%;
+    position: absolute;
+    left: 2%;
+    top: 1.5%;
+}
+#dangqianye span{
+    font-size: 2vh;
+    line-height: 4vh;
+}
+#mainbox{
+    width: 96%;
+    height:120%;
+    background-color: white;
+    box-shadow:0px 0px 10px 0px rgba(204,204,204,0.2);
+    border-radius: 5px;
+    position: absolute;
+    top: 4%;
+    left: 2%;
+    bottom: 2%;
+}
+#but{
+    margin-left: 1%;
+    margin-top: 1%;
+}
+#lin{
+    width: 100%;
+    height:1px;
+    background-color: #bcc6d3;
+    margin-top: 1%;
+}
+#content{
+    width: 98%;
+    height: 85%;
+   // margin-left: 1%;
+    /*margin-top: 1%;*/
+}
+.hang{
+    width: 45%;
+    margin-left: 4%;
+    float: left;
+    margin-top: 1%;
+}
+.hanginput{
+    width: 90%;
+    height: 35px;
+    border: 1px solid #bcc6d3;
+    float: left;
+    outline: none;
+    padding-left: 5px;
+    line-height: 35px;
+    border-radius: 2px;
+    font-size: 14px;
+    margin-top: 1%;
+}
+.hangz{
+    width: 90%;
+    margin-left: 4%;
+    float: left;
+    margin-top: 1%;
+}
+.hanginputz{
+    width: 96%;
+    height: 35px;
+    border: 1px solid #bcc6d3;
+    float: left;
+    outline: none;
+    padding-left: 5px;
+    line-height: 35px;
+    border-radius: 2px;
+    font-size: 14px;
+    margin-top: 1%;
+}

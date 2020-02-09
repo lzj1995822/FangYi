@@ -1,0 +1,32 @@
+p,h1,h2,h3,h4,h5,h6,ul,ol,dl,dd,pre{
+  margin:0;
+  padding:0;
+  list-style:none;
+}
+body{
+
+  margin:0 auto;
+  font-family: 'Source Sans Pro',sans-serif;
+  font-size: 100%;
+  background:#fff;
+  color:#333;
+}
+a{
+  color:#777777;
+  text-decoration:none;
+}
+a:hover{
+  color:#3488D8;
+}
+img{
+  vertical-align:bottom;
+}
+.main{
+
+  margin:0 auto;
+}
+.clear:after{
+  content:"";
+  display:block;
+  clear:both;
+}

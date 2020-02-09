@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>新增员工健康信息</title>
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/contants.js"></script>
+    <link rel="stylesheet" href="../css/addcommon.css">
+    <script src="../js/YZidCard.js"></script>
+</head>
+<body>
+<div class="titlebox">新增员工健康信息</div>
+<div class="buttonbox">
+    <button id="ShangBao" class="btn btnleft">上报</button>
+    <button id="QuXiao" class="btn btnright">取消</button>
+</div>
+<div class="infobox">
+    <div><span>员工姓名</span></div><input id="name" placeholder="请输入员工姓名"/>
+    <div id="JGWord" style="margin-top: 0%;display: none"><span style="color: red">员工姓名不能为空！</span></div>
+    <div><span>报备日期</span></div><input id="bbdate" type="date"/>
+    <div><span>身份证/护照</span></div><input id="idcard" placeholder="请输入身份证号码/护照"/>
+    <div><span>体温</span></div><input id="tiwen" placeholder="请输入体温"/>
+    <div><span>是否居住集宿</span></div>
+    <select id="sfjisu">
+        <option value="是">是</option>
+        <option value="否">否</option>
+    </select>
+    <div><span>是否咳嗽</span></div>
+    <select id="sfkesou">
+        <option value="是">是</option>
+        <option value="否">否</option>
+    </select>
+    <div><span>是否发热</span></div>
+    <select id="sffare">
+        <option value="是">是</option>
+        <option value="否">否</option>
+    </select>
+    <div><span>是否乏力</span></div>
+    <select id="sffali">
+        <option value="是">是</option>
+        <option value="否">否</option>
+    </select>
+    <div><span>是否呼吸困难</span></div>
+    <select id="sfhuxikunnan">
+        <option value="是">是</option>
+        <option value="否">否</option>
+    </select>
+    <div><span>其他症状</span></div><input id="qitazz" placeholder="请输入其他症状"/>
+    <div><span>说明</span></div><input id="shuoming" placeholder="请输入说明"/>
+</div>
+
+</body>
+<script>
+    function GetRequest() {
+        var urlStr = location.search
+        if (typeof urlStr == "undefined") {
+            var url = location.search; //获取url中"?"符后的字符串
+        } else {
+            var url = "?" + urlStr.split("?")[1];
+        }
+        var theRequest = new Object();
+        if (url.indexOf("?") != -1) {
+            var str = url.substr(1);
+            strs = str.split("&");
+            for (var i = 0; i < strs.length; i++) {
+                theRequest[strs[i].split("=")[0]] = decodeURI(strs[i].split("=")[1]);
+            }
+        }
+        return theRequest;
+    }
+    var parms = GetRequest()
+    var qyid = parms['qyid']
+
+    $("#name").on("change",function(){
+        var ygname = $("#name").val()
+        if(ygname==''){
+            document.getElementById('JGWord').style.display=''
+        }else{
+            document.getElementById('JGWord').style.display='none'
+        }
+    })
+
+    $("#ShangBao").unbind('click').click(function () {
+        var sfzjy = IdentityCodeValid($("#idcard").val())
+        if(sfzjy=='false'){
+            alert("身份证/护照信息不正确，请重新输入")
+        }else if($("#name").val()==''||$("#bbdate").val()==''||$("#tiwen").val()==''){
+            alert("信息不完整，请重新输入！")
+        }else{
+            var obj = {
+                'bbdate': $("#bbdate").val(),
+                'idcard': $("#idcard").val(),
+                'name': $("#name").val(),
+                'qitazz': $("#qitazz").val(),
+                'qyid': qyid,
+                'sffali': $("#sffali").val(),
+                'sffare': $("#sffare").val(),
+                'sfhuxikunnan': $("#sfhuxikunnan").val(),
+                'sfjisu': $("#sfjisu").val(),
+                'sfkesou': $("#sfkesou").val(),
+                'shuoming': $("#shuoming").val(),
+                'status': '1',
+                'tiwen': $("#tiwen").val(),
+            };
+            $.ajax({
+                url:svcHeader+"pv/jkxxs",
+                dataType:'json',
+                type:'POST',
+                contentType: 'application/json',
+                data:JSON.stringify(obj),
+                success:function (data) {
+                    if(data.code=="200") {
+                        window.location.href="XCAdd.html?qyid="+qyid
+                    }else{
+                        alert(data.msg)
+                    }
+                }
+            })
+        }
+    })
+
+    $("#QuXiao").unbind('click').click(function () {
+        $("#name").val('');
+        $("#bbdate").val('');
+        $("#idcard").val('');
+        $("#tiwen").val('');
+        $("#sfjisu").val('是');
+        $("#sfkesou").val('是');
+        $("#sffare").val('是');
+        $("#sffali").val('是');
+        $("#sfhuxikunnan").val('是');
+        $("#qitazz").val('');
+        $("#shuoming").val('');
+    })
+</script>
+</html>

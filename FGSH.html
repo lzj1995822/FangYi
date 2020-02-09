@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>复工审核</title>
+    <link rel="stylesheet" href="css/table1.css">
+    <link rel="stylesheet" href="css/mulu.css">
+    <link rel="stylesheet" href="css/element.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/0_common/bootstrap-table.css">
+    <script src="css/jquery.min.js"></script>
+    <script src="css/vue.js"></script>
+    <script src="css/element.js"></script>
+    <script src="js/table.js"></script>
+    <script src="js/0_common/bootstrap.min.js"></script>
+    <script src="js/0_common/bootstrap-table.js"></script>
+    <script src="js/constants.js"></script>
+    <script src="js/YZidCard.js"></script>
+    <link rel="stylesheet" href="layui/css/layui.css"  media="all">
+    <script src="layui/layui.js" charset="utf-8"></script>
+    <style>
+        #checkStatistics{
+            width: 96%;
+            border-radius: 5px;
+            position: absolute;
+            top: 13%;
+            left: 2%;
+            bottom: 2%;
+        }
+        #checkTotal, #failTotal, #waitCheckTotal, #qyTotal{
+            width: 25%;
+            height: 12%;
+            text-align: center;
+            font-size: 18px;
+            float: left;
+            background-color: white;
+            box-shadow:0px 0px 10px 0px rgba(204,204,204,0.2);
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #checkMainbox{
+            width: 96%;
+            background-color: white;
+            box-shadow:0px 0px 10px 0px rgba(204,204,204,0.2);
+            border-radius: 5px;
+            position: absolute;
+            top: 25%;
+            left: 2%;
+            bottom: 2%;
+        }
+        #fgsh, #fgsh-ui #import, #fgsh-ui #export{
+            height: 48px;
+            width: 117px;
+            float: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 !important;
+        }
+        .caozuochaxunbox{
+            height: 100%;
+            float: right;
+            margin-right: 5px;
+        }
+        .sh-btn {
+            margin: 0 2px;
+        }
+        .sh-btn span {
+            line-height: 12px;
+            top: 2px;
+            position: relative;
+        }
+        #checkStatistics img {
+            width: 21px;
+            height: 21px;
+            margin-right: 6px;
+        }
+        .btn-active {
+            background: url("./img/table/actbg.png") no-repeat;
+            color: white;
+            position: relative;
+            top: -8px;
+            height: 58px !important;
+        }
+        .search-btn {
+            background: url("./img/table/search.png") no-repeat;
+            width: 100px;
+            height: 33px;
+            display: inline-block;
+            position: relative;
+            top: 12px;
+        }
+    </style>
+
+</head>
+<body id="fgsh-ui">
+<div class="dqy"><span>当前页：复工审核</span></div>
+<div id="dhmenu" style="height: 48px;margin-top: 10px;">
+    <div id="fgsh"><div class="sh-btn"><img src="img/table/person.png"></div><div class="sh-btn"><span>审核</span></div></div>
+    <div id="import"><div class="sh-btn"><img src="img/table/import.png"></div><div class="sh-btn"><span>导入</span></div></div>
+    <div id="export"><div class="sh-btn"><img src="img/table/export.png"></div><div class="sh-btn"><span>导出</span></div></div>
+    <div style="float: right;margin-right: 10px;position: relative; top: -3px;">
+        <input id="search-value" type="text" name="title" required style="display: inline-block;width: 200px"  lay-verify="required" placeholder="输入公司名称或统一信用代码查询" autocomplete="off" class="layui-input">
+        <div id="search-btn" class="search-btn">
+        </div>
+    </div>
+</div>
+<div id="checkStatistics">
+    <div id="qyTotal"><img src="./img/fgsh/enterprise.png" alt=""><div>申请企业数量&nbsp;&nbsp;<span id="qyNumber" style="color: #51a9cc;font-weight: bold">0</span></div></div>
+    <div id="waitCheckTotal"><img src="./img/fgsh/standby.png" alt=""><div>待审核数量&nbsp;&nbsp;<span id="waitCheckNumber" style="color: #ffc02a;font-weight: bold">0</span></div></div>
+    <div id="checkTotal"><img src="./img/fgsh/finish.png" alt=""><div>已审核通过数量&nbsp;&nbsp;<span id="checkNumber" style="color: #4ebf73;font-weight: bold">0</span></div></div>
+    <div id="failTotal"><img src="./img/fgsh/unpass.png" alt=""><div>审核不通过数量&nbsp;&nbsp;<span id="failNumber" style="color: #f47272;font-weight: bold">0</span></div></div>
+</div>
+<div id="checkMainbox">
+    <div id="titlebox"><span>企业复工审核</span></div>
+    <div id="tabletopbox">
+        <div class="tishibox"><img src="img/tishi.png"></div>
+        <div class="tishibox"><span style="margin-left: 10px">查询结果(共</span><span id="number"></span><span>条信息)</span></div>
+    </div>
+    <div id="tablebox">
+        <table id="table"
+               data-toolbar="#toolbar"
+               data-show-export="true"
+               data-pagination="false"
+               data-page-list="[10, 25, 50, 100, ALL]"
+               data-id-field="id"
+               data-side-pagination="server"
+               data-url="../action"
+               data-query-params="queryParams"
+               data-query-params-type="limit">
+        </table>
+    </div>
+</div>
+
+</body>
+<script>
+    var svcHeader = Constants.path
+   var qyid = localStorage.getItem('qyid');
+  //  var qyid = "b4db96ab394247f995aa00c62d29589c";
+    var qymc = localStorage.getItem('qymc');
+    var checkQyId = "";
+    $(function () {
+        //1.初始化Table
+        var oTable = new TableInit();
+        oTable.Init();
+        var user = JSON.parse(localStorage.getItem("user"));
+        // //2.初始化Button的点击事件
+        // var oButtonInit = new ButtonInit();
+        // oButtonInit.Init();
+        $.ajax({
+            url: svcHeader + "pb/qyxxs/action/search",
+            dataType: 'json',
+            type: 'get',
+            data: {"pageNo":0,
+                "pageSize":10,
+                "status":1,
+                "qu":user.qu,
+                "zhen":user.zhen,
+            },
+            success: function (data) {
+                $("#qyNumber").text(data.data.count);
+            },
+        });
+
+        $.ajax({
+            url: svcHeader + "pb/qyxxs/action/search",
+            dataType: 'json',
+            type: 'get',
+            data: {"pageNo":0,
+                "pageSize":10,
+                "status":2,
+                "qu":user.qu,
+                "zhen":user.zhen,},
+            success: function (data) {
+                $("#waitCheckNumber").text(data.data.count);
+            },
+        });
+        $.ajax({
+            url: svcHeader + "pb/qyxxs/action/search",
+            dataType: 'json',
+            type: 'get',
+            data: {"pageNo":0,
+                "pageSize":10,
+                "status":3,
+                "qu":user.qu,
+                "zhen":user.zhen,},
+            success: function (data) {
+                $("#checkNumber").text(data.data.count);
+            },
+        });
+        $.ajax({
+            url: svcHeader + "pb/qyxxs/action/search",
+            dataType: 'json',
+            type: 'get',
+            data: {"pageNo":0,
+                "pageSize":10,
+                "status":4,
+                "qu":user.qu,
+                "zhen":user.zhen,},
+            success: function (data) {
+                $("#failNumber").text(data.data.count);
+            },
+        });
+    });
+    var layer;
+    layui.use(['layer', 'form'], function(){
+        layer = layui.layer
+
+        //layer.msg('Hello World');
+    });
+    var TableInit = function () {
+        var oTableInit = new Object();
+        //初始化Table
+        oTableInit.Init = function () {
+            $('#table').bootstrapTable({
+                url: svcHeader+'pb/qyxxs/action/search',         //请求后台的URL（*）
+                method: 'get',                      //请求方式（*）
+                toolbar: '#toolbar',                //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                sortable: false,                     //是否启用排序
+                sortOrder: "asc",                   //排序方式
+                queryParams: oTableInit.queryParams,//传递参数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                pageSize: 10,                       //每页的记录行数（*）
+                pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+                // search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                // strictSearch: true,
+                // showColumns: true,                  //是否显示所有的列
+                // showRefresh: true,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: true,                //是否启用点击选中行
+                //height: 500,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "ID",                     //每一行的唯一标识，一般为主键列
+                // showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+                cardView: false,                    //是否显示详细视图
+                detailView: false,                   //是否显示父子表
+                responseHandler:responseHandler,
+                columns: [{
+                    checkbox: true
+                },
+                    {
+                        field: 'idcard',
+                        align: 'center',
+                        title: '企业信用代码'
+                    }, {
+                        field: 'name',
+                        align: 'center',
+                        title: '企业名称'
+                    },{
+                        field: 'ssshequ',
+                        align: 'center',
+                        title: '所属社区'
+                    },{
+                        field: 'gsrenshu',
+                        align: 'center',
+                        title: '企业人员总数'
+                    },{
+                        field: 'createtime',
+                        align: 'center',
+                        title: '上报时间'
+                    },{
+                        field: 'faren',
+                        align: 'center',
+                        title: '联系人'
+                    },{
+                        field: 'lxrphone',
+                        align: 'center',
+                        title: '联系电话'
+                    },{
+                        field: 'status',
+                        align: 'center',
+                        title: '审核状态',
+                        formatter : function(value, row, index) {
+                            var a = "";
+                            if(row.status=='1') {
+                                a ="<span style='color:#51a9cc;font-weight: bold'>未上报</span>"
+                            }else if(row.status=='2'){
+                                a ="<span style='color:#ffc02a;font-weight: bold'>待审核</span>"
+                            }else if(row.status=='3'){
+                                a ="<span style='color:#4ebf73;font-weight: bold'>审核通过</span>"
+                            }else if(row.status=='4'){
+                                a ="<span style='color:#f47272;font-weight: bold'>审核不通过</span>"
+                            }
+                            return a;
+                        },
+                    },
+                ],
+            });
+            initTableHeight()
+        }
+        oTableInit.queryParams = function (params) {
+            var tempValue = $("#search-value").val();
+            var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                pageNo:params.offset/params.limit +1,
+                pageSize:params.limit,
+               // qyid:qyid,
+            };
+            if (tempValue) {
+                temp.name = tempValue;
+            }
+          /*  var user = JSON.parse(localStorage.getItem("user"));
+            if (user.qu) {
+                temp.qu = user.qu
+            }
+            if (user.zhen) {
+                temp.zhen = user.zhen
+            }*/
+            return temp;
+        };
+        return oTableInit;
+    };
+    function  responseHandler(res) {
+        $("#number").text(res.data.count)
+        return {
+            "rows": res.data.entities,
+            "total":res.data.count
+            //数据
+        }
+    }
+    $("#search-btn").click(function () {
+        $('#table').bootstrapTable("refresh");
+    })
+    function activeBtn(el, cb) {
+        var actives = $(".btn-active");
+        if (actives.length > 0) {
+            actives.children().children("img")[0].src = actives.children().children("img")[0].src.replace(/-active.png/,".png")
+        }
+        actives.removeClass("btn-active");
+        el.className = "btn-active";
+        $(el).children().children("img")[0].src = $(el).children().children("img")[0].src.replace(/.png/,"-active.png")
+    }
+    //审核弹框
+    $("#fgsh").unbind('click').click(function(){
+        activeBtn(this);
+        var row = $.map($('#table').bootstrapTable(
+            'getSelections'), function(row) {
+            return row;
+        });
+        if(row.length==1) {
+            if(row[0].status=="2"){
+                var obj = {
+                    "qyid":row[0].id
+                }
+                $.ajax({
+                    url: svcHeader + "pb/qysqbs/findall",
+                    dataType: 'json',
+                    type: 'get',
+                    data: obj,
+                    success: function (data) {
+                        layer.open({
+                            type: 2,
+                            title:"申报-审核",
+                            content: 'testXq.html?id='+data.data[0].id+","+row[0].id,
+                            offset: 'rb',
+                            area: ['70%', '90%']
+                        });
+                    },
+                })
+            }else{
+                alert("当前状态不可审核");
+            }
+        }else{
+            alert("只能选择一条")
+        }
+    });
+
+
+
+    $("#export").click(function () {
+        activeBtn(this);
+        window.location.href=svcHeader+"qysqbs/export?qyid="+qyid
+    })
+    $("#import").click(function () {
+        activeBtn(this);
+        $("#excelFile").trigger("click");
+    })
+    function fileUpload() {
+        var file=document.getElementById("excelFile");
+        var fileObj = file.files[0];
+        var formdata = new FormData();
+        formdata.append('file',fileObj);
+        //console.log(formdata)
+        $.ajax({
+            url: svcHeader + "qysqbs/import",//这里写你的url
+            type: 'POST',
+            data:formdata,
+            processData:false,
+            contentType:false,
+            success: function (map) {
+                alert("上传成功!");
+                $("#table").bootstrapTable('refresh');
+            },
+            error: function (data) {
+                alert("页面请求失败！");
+            }
+        })
+    }
+
+
+    $("#cxButton").unbind('click').click(function(){
+        $.ajax({
+            url: svcHeader + "pb/qyxxs/action/search",
+            dataType: 'json',
+            type: 'get',
+            data: {"pageNo":1,
+                "pageSize":10,
+                "key": $("#cxContent").val()},
+            success: function (data) {
+                $("#table").bootstrapTable('destroy');
+                var oTable = new TableInit();
+                oTable.Init();
+            },
+        })
+    })
+
+</script>
+
+</html>

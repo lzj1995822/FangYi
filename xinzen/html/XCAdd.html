@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>新增员工行程信息</title>
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/contants.js"></script>
+    <link rel="stylesheet" href="../css/addcommon.css">
+    <script src="../js/YZidCard.js"></script>
+</head>
+<body>
+<div class="titlebox">新增员工行程信息</div>
+<div class="buttonbox">
+    <button id="ShangBao" class="btn btnleft">上报</button>
+    <button id="QuXiao" class="btn btnright">取消</button>
+</div>
+<div class="infobox">
+    <div><span>员工姓名</span></div><input id="name" placeholder="请输入员工姓名"/>
+    <div id="JGWord" style="margin-top: 0%;display: none"><span style="color: red">员工姓名不能为空！</span></div>
+    <div><span>身份证/护照</span></div><input id="idcard" placeholder="请输入身份证号码/护照"/>
+    <div><span>出发日期</span></div><input id="cfdate" type="date"/>
+    <div><span>到达日期</span></div><input id="dddate" type="date"/>
+    <div><span>出发地点</span></div><input id="cfaddress" placeholder="请输入出发地点"/>
+    <div><span>到达地点</span></div><input id="daaddress" placeholder="请输入到达地点"/>
+    <div><span>出行方式</span></div><input id="cxfangshi" placeholder="请输入出行方式"/>
+    <div><span>是否返程复工</span></div>
+    <select id="sffugong">
+        <option value="是">是</option>
+        <option value="否">否</option>
+    </select>
+    <div><span>疫情期间是否途经(到达)疫区</span></div><input id="sftujingyq" placeholder="请输入途经地点"/>
+    <div><span>备注说明</span></div><input id="beizhu" placeholder="请输入备注说明"/>
+</div>
+
+</body>
+<script>
+    function GetRequest() {
+        var urlStr = location.search
+        if (typeof urlStr == "undefined") {
+            var url = location.search; //获取url中"?"符后的字符串
+        } else {
+            var url = "?" + urlStr.split("?")[1];
+        }
+        var theRequest = new Object();
+        if (url.indexOf("?") != -1) {
+            var str = url.substr(1);
+            strs = str.split("&");
+            for (var i = 0; i < strs.length; i++) {
+                theRequest[strs[i].split("=")[0]] = decodeURI(strs[i].split("=")[1]);
+            }
+        }
+        return theRequest;
+    }
+    var parms = GetRequest()
+    var qyid = parms['qyid']
+
+    $("#name").on("change",function(){
+        var ygname = $("#name").val()
+        if(ygname==''){
+            document.getElementById('JGWord').style.display=''
+        }else{
+            document.getElementById('JGWord').style.display='none'
+        }
+    })
+
+    $("#ShangBao").unbind('click').click(function () {
+        var sfzjy = IdentityCodeValid($("#idcard").val())
+        if(sfzjy=='false'){
+            alert("身份证/护照信息不正确，请重新输入")
+        }else if($("#name").val()==''||$("#cfdate").val()==''||$("#cxfangshi").val()==''||$("#dddate").val()==''||$("#cfaddress").val()==''||$("#daaddress").val()==''||$("#sftujingyq").val()==''){
+            alert("信息不完整，请重新输入！")
+        }else{
+            var obj = {
+                'beizhu': $("#beizhu").val(),
+                'cfaddress': $("#cfaddress").val(),
+                'cfdate': $("#cfdate").val(),
+                'cxfangshi': $("#cxfangshi").val(),
+                'daaddress': $("#daaddress").val(),
+                'dddate': $("#dddate").val(),
+                'idcard': $("#idcard").val(),
+                'name': $("#name").val(),
+                'qyid': qyid,
+                'sffugong': $("#sffugong").val(),
+                'sftujingyq': $("#sftujingyq").val(),
+                'status': "1",
+            };
+            $.ajax({
+                url:svcHeader+"pv/xcxxs",
+                dataType:'json',
+                type:'POST',
+                contentType: 'application/json',
+                data:JSON.stringify(obj),
+                success:function (data) {
+                    if(data.code=="200") {
+                        alert("上报成功！")
+                    }else{
+                        alert(data.msg)
+                    }
+                }
+            })
+        }
+    })
+    $("#QuXiao").unbind('click').click(function () {
+        $("#name").val('');
+        $("#idcard").val('');
+        $("#cfdate").val('');
+        $("#dddate").val('');
+        $("#cfaddress").val('');
+        $("#daaddress").val('');
+        $("#cxfangshi").val('');
+        $("#sffugong").val('是');
+        $("#sftujingyq").val('');
+        $("#beizhu").val('');
+
+    })
+</script>
+</html>
