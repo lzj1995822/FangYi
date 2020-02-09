@@ -39,6 +39,11 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            cursor: pointer;
+        }
+        #checkTotal:hover, #failTotal:hover, #waitCheckTotal:hover, #qyTotal:hover {
+            background-color: rgba(203, 199, 201, 0.23);
+
         }
         #checkMainbox{
             width: 96%;
@@ -109,10 +114,10 @@
     </div>
 </div>
 <div id="checkStatistics">
-    <div id="qyTotal"><img src="./img/fgsh/enterprise.png" alt=""><div>申请企业数量&nbsp;&nbsp;<span id="qyNumber" style="color: #51a9cc;font-weight: bold">0</span></div></div>
-    <div id="waitCheckTotal"><img src="./img/fgsh/standby.png" alt=""><div>待审核数量&nbsp;&nbsp;<span id="waitCheckNumber" style="color: #ffc02a;font-weight: bold">0</span></div></div>
-    <div id="checkTotal"><img src="./img/fgsh/finish.png" alt=""><div>已审核通过数量&nbsp;&nbsp;<span id="checkNumber" style="color: #4ebf73;font-weight: bold">0</span></div></div>
-    <div id="failTotal"><img src="./img/fgsh/unpass.png" alt=""><div>审核不通过数量&nbsp;&nbsp;<span id="failNumber" style="color: #f47272;font-weight: bold">0</span></div></div>
+    <div id="qyTotal" onclick="refresh('1')"><img src="./img/fgsh/enterprise.png" alt=""><div >申请企业数量&nbsp;&nbsp;<span id="qyNumber" style="color: #51a9cc;font-weight: bold;">0</span></div></div>
+    <div id="waitCheckTotal" onclick="refresh('2')"><img src="./img/fgsh/standby.png" alt=""><div>待审核数量&nbsp;&nbsp;<span id="waitCheckNumber" style="color: #ffc02a;font-weight: bold">0</span></div></div>
+    <div id="checkTotal" onclick="refresh('3')"><img src="./img/fgsh/finish.png" alt=""><div>已审核通过数量&nbsp;&nbsp;<span id="checkNumber" style="color: #4ebf73;font-weight: bold">0</span></div></div>
+    <div id="failTotal" onclick="refresh('4')"><img src="./img/fgsh/unpass.png" alt=""><div>审核不通过数量&nbsp;&nbsp;<span id="failNumber" style="color: #f47272;font-weight: bold">0</span></div></div>
 </div>
 <div id="checkMainbox">
     <div id="titlebox"><span>企业复工审核</span></div>
@@ -142,6 +147,7 @@
   //  var qyid = "b4db96ab394247f995aa00c62d29589c";
     var qymc = localStorage.getItem('qymc');
     var checkQyId = "";
+    var currentStatus = "1";
     $(function () {
         //1.初始化Table
         var oTable = new TableInit();
@@ -156,9 +162,8 @@
             type: 'get',
             data: {"pageNo":0,
                 "pageSize":10,
-                "status":1,
                 "qu":user.qu,
-                "zhen":user.zhen,
+               "street":user.zhen,
             },
             success: function (data) {
                 $("#qyNumber").text(data.data.count);
@@ -172,8 +177,9 @@
             data: {"pageNo":0,
                 "pageSize":10,
                 "status":2,
-                "qu":user.qu,
-                "zhen":user.zhen,},
+               "qu":user.qu,
+                "street":user.zhen,
+                },
             success: function (data) {
                 $("#waitCheckNumber").text(data.data.count);
             },
@@ -186,7 +192,7 @@
                 "pageSize":10,
                 "status":3,
                 "qu":user.qu,
-                "zhen":user.zhen,},
+                "street":user.zhen,},
             success: function (data) {
                 $("#checkNumber").text(data.data.count);
             },
@@ -199,7 +205,7 @@
                 "pageSize":10,
                 "status":4,
                 "qu":user.qu,
-                "zhen":user.zhen,},
+                "street":user.zhen,},
             success: function (data) {
                 $("#failNumber").text(data.data.count);
             },
@@ -283,9 +289,9 @@
                             }else if(row.status=='2'){
                                 a ="<span style='color:#ffc02a;font-weight: bold'>待审核</span>"
                             }else if(row.status=='3'){
-                                a ="<span style='color:#4ebf73;font-weight: bold'>审核通过</span>"
+                                a ="<span style='color:#4ebf73;font-weight: bold'>通过</span>"
                             }else if(row.status=='4'){
-                                a ="<span style='color:#f47272;font-weight: bold'>审核不通过</span>"
+                                a ="<span style='color:#f47272;font-weight: bold'>不通过</span>"
                             }
                             return a;
                         },
@@ -304,13 +310,16 @@
             if (tempValue) {
                 temp.name = tempValue;
             }
-          /*  var user = JSON.parse(localStorage.getItem("user"));
+            var user = JSON.parse(localStorage.getItem("user"));
             if (user.qu) {
                 temp.qu = user.qu
             }
             if (user.zhen) {
-                temp.zhen = user.zhen
-            }*/
+                temp.street = user.zhen
+            }
+            if(currentStatus!="1"){
+                temp.status = currentStatus;
+            }
             return temp;
         };
         return oTableInit;
@@ -356,7 +365,7 @@
                         layer.open({
                             type: 2,
                             title:"申报-审核",
-                            content: 'testXq.html?id='+data.data[0].id+","+row[0].id,
+                            content: 'ShXq.html?id='+data.data[0].id+","+row[0].id,
                             offset: 'rb',
                             area: ['70%', '90%']
                         });
@@ -417,7 +426,13 @@
                 oTable.Init();
             },
         })
-    })
+    });
+
+
+    function refresh(status) {
+        currentStatus = status;
+        $("#table").bootstrapTable('refresh');
+    }
 
 </script>
 
