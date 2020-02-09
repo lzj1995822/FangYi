@@ -191,10 +191,16 @@
             </blockquote>
         </div>
     </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">员工相关信息</label>
+        <div class="layui-upload">
+            <button class="layui-btn layui-btn-warm" onclick="yg()">查看</button>
+        </div>
+    </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label">审核</label>
-        <select id="shenhejieguo" >
+        <select id="shenhejieguo"  style="margin-top: 9px;height: 25px;margin-left: -7px;">
             <option value="不通过">不通过</option>
             <option value="通过">通过</option>
         </select>
@@ -202,11 +208,12 @@
 
     <div class="layui-form-item"  id="noteTips">
         <label class="layui-form-label">备注</label>
-        <textarea id="shenheyijian" ></textarea>
+        <textarea id="shenheyijian" style="width: 33%;margin-left: -6px;" rows="5"></textarea>
     </div>
 
     <div class="layui-form-item">
         <div class="layui-input-block">
+
             <button class="layui-btn" onclick="gb()">审核</button>
         </div>
     </div>
@@ -218,8 +225,8 @@
 <script src="layui/jquery.serializejson.min.js"></script>
 <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
 <script>
-    var  id = getQueryString("id").split(",")[0];
-    var rowqyid =  getQueryString("id").split(",")[1];
+     var  id = getQueryString("id").split(",")[0];
+     var rowqyid =  getQueryString("id").split(",")[1];
     var ctx = Constants.path;
     var svcHeader = Constants.path;
     var qyid = localStorage.getItem('qyid');
@@ -347,6 +354,22 @@
             $("#noteTips").hide();
         }
     });
+
+    var layer;
+    layui.use(['form'], function(){
+        layer   = layui.layer
+    })
+    //查看详情
+    function yg() {
+        localStorage.setItem('qyid',rowqyid);
+        layer.open({
+            type: 2,
+            title:"申报详情",
+            content: 'main2.html',
+            offset: 'rb',
+            area: ['70%', '90%']
+        });
+    }
 </script>
 
 </body>
